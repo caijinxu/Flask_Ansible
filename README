@@ -1,0 +1,25 @@
+一个使用Flask管理动态主机运行ansible的项目
+
+写这个项目主要满足自己日常批量管理主机需要，还要很多需要修改的小bug和优化的地方
+
+主要功能
+    自动扫描主机
+        需要把sshkey放到keyfile目录下，不推荐使用密码
+    资产管理
+        对在线资产进行简单管理
+    运行ansible任务
+        运行adhoc任务
+        运行playbook任务
+        使用mongodb作为日志存储
+
+ansible使用mongodb存储运行日志
+MongoDB 设置
+    设置验证登录
+        use admin
+        db.createUser({user: 'root',pwd: 'admin',roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]});
+    创建项目用户
+        use devops
+        db.createUser({user: 'devopser',pwd: '123456',roles: [ { role: "readWrite", db: "devops" } ] });
+
+
+ansible role 脚本主要来自https://github.com/lework/Ansible-roles

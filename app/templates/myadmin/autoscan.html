@@ -1,0 +1,40 @@
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    <h4>扫描发现网段或IP登录信息</h4>
+    <form action="{{ url_for("web.autoscan",_external=True)}}" method="post">
+        <label for="ips">扫描发现网段或IP登录信息</label>：
+        <textarea class="form-control" id="ips" name="ips" placeholder="输入IP地址或IP地址段,以;隔开如：192.168.15.202;192.168.15.0/24" required="" rows="3"></textarea>
+        <button type="submit" class="btn btn-primary">查找</button>
+    </form>
+    <hr>
+    {{ super() }}
+     <script>
+    $(document).ready(function() {
+        // 刷新配置信息
+        $(".model-list").on("click", ".addcmdb", function(event) { // javascript bind
+            var ipAdd = $(this).parents("tr").children(".col-ip").text()
+            $.ajax({
+                url: '{{ url_for('web.addCMDB')}}',
+                type: 'post',
+                dataType: 'json',
+                data: {hostip: ipAdd},
+                complete: function() {
+                    window.location.reload()
+                }
+            })
+        })
+    })
+    </script>
+{% endblock %}
+
+{% block list_header scoped %}
+    {{ super() }}
+    <th>操作</th>
+{% endblock %}
+
+
+{% block list_row scoped %}
+    {{ super() }}
+    <td><button type="button" class="btn btn-primary addcmdb" >添加入CMDB</button></td>
+{% endblock %}
+

@@ -1,0 +1,43 @@
+---
+# author: lework
+
+- name: install | Check if etcd local file is already configured.
+  stat: path={{ etcd_file_path }}
+  connection: local
+  register: etcd_file_result
+
+- name: install | Create software directory.
+  file: path={{ software_files_path }} state=directory
+  connection: local
+  when: not etcd_file_result.stat.exists
+
+- name: install | Download etcd file.
+  get_url: url={{ etcd_file_url }} dest={{ software_files_path }}
+  connection: local
+  when: not etcd_file_result.stat.exists
+
+- name: install | Confirm the existence of the installation directory.
+  file: path={{ software_install_path }} state=directory
+
+- name: install | Copy etcd file to agent.
+  unarchive:
+    src: "{{ etcd_file_path }}"
+    dest: "{{ software_install_path }}"
+    creates: "{{ software_install_path}}/etcd-v{{ etcd_version }}-linux-amd64"
+
+- name: install | Check if etcd remote soft link is already configured.
+  stat: path="{{ software_install_path }}/etcd"
+  register: etcd_soft_link_result
+
+- name: install | Create etcd dir soft link.
+  file: "src={{ software_install_path }}/etcd-v{{ etcd_version }}-linux-amd64 dest={{ software_install_path }}/etcd state=link"
+  when: not etcd_soft_link_result.stat.exists
+  
+- name: install | Config environment variable.
+  lineinfile: dest=/etc/profile line='export PATH={{ software_install_path }}/etcd:$PATH'
+  
+- name: install | Create etcd group.
+  group: name={{ etcd_user }}
+
+- name: install | Create etcd user.
+  user: name={{ etcd_user }} group={{ etcd_user }} shell=/sbin/nologin

@@ -1,0 +1,16 @@
+---
+# author: lework
+
+- name: Include tomcat8 variables.
+  include_vars: tomcat8.yml
+  when: tomcat_version | regex_search("^8\.")
+  
+- import_tasks: install.yml
+- import_tasks: configure.yml
+
+- import_tasks: apr.yml
+  run_once: yes
+  when: tomcat_apr
+
+- import_tasks: logrotate.yml
+- import_tasks: check.yml

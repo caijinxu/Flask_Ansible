@@ -1,0 +1,3 @@
+- hosts: dynamic_host
+  roles:
+    - { role: ansible-role-nginx }

@@ -1,0 +1,21 @@
+---
+# author: lework
+
+- name: epel | Install epel release.
+  yum: name=epel-release state=present
+  
+- name: epel | Change source.
+  shell: |
+    sed -e 's!^#baseurl=!baseurl=!g' \
+    -e  's!^mirrorlist=!#mirrorlist=!g' \
+    -e 's!mirror.centos.org!mirrors.ustc.edu.cn!g' \
+    -i  /etc/yum.repos.d/CentOS-Base.repo &&
+    sed -e 's!^mirrorlist=!#mirrorlist=!g' \
+    -e 's!^#baseurl=!baseurl=!g' \
+    -e 's!^metalink!#metalink!g' \
+    -e 's!//download\.fedoraproject\.org/pub!//mirrors.ustc.edu.cn!g' \
+    -e 's!http://mirrors\.ustc!https://mirrors.ustc!g' \
+    -i /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel-testing.repo
+  
+- name: epel | Update yum cache.
+  shell: yum clean all && yum makecache

@@ -1,0 +1,34 @@
+{% extends 'admin/model/list.html' %}
+
+{% block list_header scoped %}
+    {{ super() }}
+    <th>操作</th>
+{% endblock %}
+
+
+{% block list_row scoped %}
+    {{ super() }}
+    <td><button type="button" class="btn btn-primary refresh" >刷新配置信息</button></td>
+{% endblock %}
+
+{% block body %}
+    {{ super() }}
+    <script>
+    $(document).ready(function() {
+        // 刷新配置信息
+        $(".model-list").on("click", ".refresh", function(event) { // javascript bind
+            var ipAdd = $(this).parents("tr").children(".col-ip").text()
+            $.ajax({
+                url: '{{ url_for('web.refresh_cmdb')}}',
+                type: 'post',
+                dataType: 'json',
+                data: {ip: ipAdd},
+                complete: function() {
+                    window.location.reload()
+                }
+            })
+        })
+    })
+    </script>
+
+{% endblock %}

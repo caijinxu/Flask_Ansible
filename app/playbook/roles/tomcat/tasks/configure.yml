@@ -1,0 +1,37 @@
+---
+# author: lework
+
+- name: configure | Copy tomcat server.xml.
+  template:
+    src: "server{{ tomcat_version[:1] }}.xml.j2"
+    dest: "{{ tomcat_work_path }}/conf/server.xml"
+    mode: 0644
+
+- name: configure | Copy tomcat daemon.sh.
+  copy:
+    src: "{{ tomcat_work_path }}/bin/daemon.sh"
+    dest: "/etc/rc.d/init.d/{{ tomcat_services_name }}"
+    mode: 0755
+    remote_src: True
+    
+- name: "configure | Add environment variable to /etc/rc.d/init.d/{{ tomcat_services_name }}"
+  blockinfile:
+    path: "/etc/rc.d/init.d/{{ tomcat_services_name }}"
+    insertafter: "# resolve links*"
+    marker: " "
+    block: |
+     # chkconfig: 2345 20 80
+     # description: simple example to start tomcat
+     JAVA_HOME={{ java_home }}
+     CATALINA_HOME={{ tomcat_work_path }}
+     CATALINA_OPTS='{{ tomcat_catalina_opts }}'
+     TOMCAT_USER={{ tomcat_user }}
+     JSVC_OPTS='-umask 022'
+
+     
+- name: "configure | Change jsvc current working directory."
+  lineinfile:
+    path: "/etc/rc.d/init.d/{{ tomcat_services_name }}"
+    insertafter: '-user \$TOMCAT_USER \\'
+    line: '      -cwd $CATALINA_TMP \'
+        

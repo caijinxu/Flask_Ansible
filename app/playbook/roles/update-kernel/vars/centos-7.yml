@@ -1,0 +1,5 @@
+---
+# lework
+
+
+update_kernel_repo_rpm: "https://mirror.tuna.tsinghua.edu.cn/elrepo/elrepo/el7/SRPMS/elrepo-release-7.0-3.el7.elrepo.src.rpm"

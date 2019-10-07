@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./dockerfile/mysql:/var/lib/mysql
+      - ./dockerfile/my.cnf:/etc/mysql/my.cnf
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./dockerfile/mongo:/data/db

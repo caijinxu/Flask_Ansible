@@ -1,0 +1,8 @@
+---
+# author: lework
+
+docker_compose_version: "1.24.1"
+
+docker_compose_url: "https://get.daocloud.io/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
+
+docker_exec_path: "/usr/local/bin/docker-compose"

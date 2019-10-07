@@ -1,0 +1,19 @@
+---
+# author: lework
+
+software_files_path: "/opt/software"
+software_install_path: "/usr/local"
+
+nodejs_version: "8.11.1"
+
+nodejs_file: "node-v{{ nodejs_version }}-linux-x64.tar.gz"
+nodejs_file_path: "{{ software_files_path }}/{{ nodejs_file }}"
+nodejs_file_url: "http://nodejs.org/dist/v{{ nodejs_version }}/{{ nodejs_file }}"
+
+nodejs_user: "nodejs"
+nodejs_log_path: "/var/log/nodejs"
+npm_config_prefix: "{{ nodejs_install_path }}/nodejs"
+npm_registry: "https://registry.npm.taobao.org"
+
+nodejs_npm_global_packages: 
+ - {'name': 'forever'}

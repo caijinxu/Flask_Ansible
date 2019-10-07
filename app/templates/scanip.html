@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <h4>扫描发现网段或IP登录信息</h4>
+    <form action="{{ url_for("web.autoscan",_external=True)}}" method="post">
+        {% for filed in form %}
+            <div class="form-group">
+                {{ filed.label }}:{{ filed }}
+                {% if  filed.errors %}
+                    <div class="alert alert-warning" role="alert">{{ filed.errors[0] }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">查找</button>
+    </form>
+    <hr>
+    <div class="table-responsive">
+        <table id="list_scan" class="table table-striped table-bordered table-hover model-list">
+            <thead>
+                <tr>
+                    <th class="col-md-1">&nbsp;</th>
+                    <th class="col-md-3">IP</th>
+                    <th class="col-md-1">可登录状态</th>
+                    <th class="col-md-2">选择加入业务</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for info in infos %}
+                <tr>
+                    <td class="list-buttons-column">
+                        <a class="icon" href={{ url_for('web.editscanip',_external=True,ip=info.ip)}} title="Edit Record">
+                              <span class="fa fa-pencil glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <form class="icon" method="POST" action="/audoscan/delete/">
+                                <input id="ip" name="ip" required type="hidden" value={{ info['ip'] }}>
+{#                                <input id="url" name="url" type="hidden" value="/admin/hostlogininfo/">#}
+                                <button onclick="return safeConfirm('Are you sure you want to delete this record?');" title="Delete record">
+                                    <span class="fa fa-trash glyphicon glyphicon-trash"></span>
+                                </button>
+                        </form>
+                    </td>
+                    <td class="hostip">{{ info.ip }}</td>
+                    <td>{{ info.ssh_status.name }}</td>
+                    <td><a href="{{ url_for('web.addCMDB',hostip=info.ip) }}" class="btn btn-primary">加入CMDB</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}

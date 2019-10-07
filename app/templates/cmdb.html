@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block body %}
+    <h3>主机详细列表</h3>
+    <hr>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <table id="server_list" class="table table-striped">
+                <thead>
+					<tr>
+                        <th>IP地址</th>
+                        <th>名称</th>
+                        <th>vcpus</th>
+                        <th>内存</th>
+                        <th>系统版本</th>
+                        <th>厂商</th>
+                        <th>所属业务</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for server in servers %}
+                        <tr>
+                            <td class="ip">{{ server.ip }}</td>
+                            {%  if server.hostremarks %} }}
+                                <td><a class="edit-remarks ">{{ server.hostremarks }}</a></td>
+                            {% else %}
+                                <td><a class="edit-remarks ">修改名称</a></td>
+                            {% endif %}
+                            <td>{{ server.vcpus }}</td>
+                            <td>{{ server.memory }}</td>
+                            <td>{{ server.system_ver }}</td>
+                            <td>{{ server.vendor }}</td>
+                            <td>{{ server.business.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">修改名称</h4>
+
+                </div>
+                <from action="{{ url_for('web.creatplaybook') }}"  method="post">
+                <div class="modal-body">
+                    <input readonly="readonly" id="edit-ip">
+                    <input id="edit-name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">提交更改</button>
+                </div>
+                </from>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <script>
+        // 页面加载完成后, 回调函数
+        $(document).ready(function() {
+
+            // 1, 绑定按钮的事件处理函数
+            // 用javascript委托机制, DOM事件冒泡的一个关键原理
+            // 编辑任务
+            $("#server_list").on("click", ".edit-remarks", function (event) {
+                // 取当前job的信息，赋值给模态框的input
+                $('#edit-ip').val($(this).parents('tr').children('.ip').text())
+                $('#edit-remark').val($(this).parents('tr').children('.edit-remarks').text())
+                {#$('#edit-cronExpr').val($(this).parents('tr').children('.job-cronExpr').text())#}
+                // 弹出模态框
+                $('#myModal').modal('show')
+            })
+    })
+    </script>
+{% endblock %}

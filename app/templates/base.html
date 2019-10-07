@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>DEVOPS</title>
+      {% block head_meta %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+      {% endblock %}
+
+      {% block head %}
+          	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+          <link href="{{ url_for('static', filename='bootstrap/bootstrap3/swatch/default/bootstrap.min.css',v='3.3.5') }}" rel="stylesheet">
+          <link href="{{ url_for('static', filename='bootstrap/bootstrap3/css/bootstrap-theme.min.css',v='3.3.5') }}" rel="stylesheet">
+          <link href="{{ url_for('static', filename='admin/css/bootstrap3/admin.css',v='1.1.1') }}" rel="stylesheet">
+	      <link href="{{ url_for('static', filename='admin/css/bootstrap3/submenu.css') }}" rel="stylesheet">
+
+            <style>
+            body {
+                padding-top: 4px;
+            }
+            </style>
+
+      {% endblock %}
+
+  </head>
+
+<body>
+    {% block page_body %}
+    <div class="container">
+      <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#admin-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          {% block brand %}
+{#          <a class="navbar-brand" href={{ url_for('web.index') }}>DEVOPS</a>#}
+              <a class="navbar-brand"  href="{{ url_for('autoscan.index_view') }}">DEVOPS</a>
+
+          {% endblock %}
+        </div>
+        <!-- navbar content -->
+          {% block main_menu %}
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+                   <a data-toggle="dropdown" class="dropdown-toggle" href="#"  role="button">
+                     资产信息
+                      <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li>
+                          <a href={{ url_for('autoscan.index_view') }}>扫描存活主机</a>
+                      </li>
+                      <li role="separator" class="divider"></li>
+                      <li>
+                          <a href={{ url_for('serverinfo.index_view') }}>服务器信息</a>
+                      </li>
+                      <li>
+                          <a href={{ url_for('business.index_view') }}>业务信息</a>
+                      </li>
+
+                  </ul>
+              </li>
+              <li class="dropdown">
+                   <a data-toggle="dropdown" class="dropdown-toggle" href="#"  role="button">
+                     Ansible
+                      <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li>
+                          <a href={{ url_for('web.adhoc') }}>执行adhoc任务</a>
+                      </li>
+                      <li>
+                          <a href={{ url_for('web.playbookcenter') }}>PlayBook</a>
+                      </li>
+                      <li role="separator" class="divider"></li>
+                      <li>
+                          <a href={{ url_for('web.history') }}>任务历史</a>
+                      </li>
+                      <li role="separator" class="divider"></li>
+                      <li>
+                          <a href={{ url_for('roles.index_view') }}>Roles</a>
+                      </li>
+                  </ul>
+              </li>
+          </ul>
+          {% endblock %}
+
+          {% block menu_links %}
+
+          {% endblock %}
+          {% block access_control %}
+              <ul class="nav navbar-nav navbar-right">
+                {% if not current_user.is_authenticated %}
+                    <li><a href="{{ url_for('web.login') }}">登录</a></li>
+                    <li><a style="margin-left: 40px;" href="{{ url_for('web.register') }}">注册</a></li>
+
+                {% else %}
+                    <li><a class="btn">{{ current_user.username }}</a></li>
+                    <li><a href="{{ url_for('web.logout') }}">注销</a></li>
+                {% endif %}
+              </ul>
+          {% endblock %}
+      </nav>
+
+      {% block messages %}
+          {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                {% if message %}
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+          {% endwith %}
+         {% if form and form.errors %}
+            {% for key, error in form.errors.items() %}
+                <div class="alert alert-warning" role="alert">{{ error }}</div>
+            {% endfor %}
+         {% endif %}
+      {% endblock %}
+
+      {% block body %}{% endblock %}
+    </div>
+    {% endblock %}
+</body>
+
+{% block script %}
+{% endblock %}
+
+{% block tail_js %}
+    <script src="{{ url_for('static',filename='vendor/jquery.min.js', v='2.1.4') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static',filename='bootstrap/bootstrap3/js/bootstrap.min.js', v='3.3.5') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static',filename='vendor/moment.min.js', v='2.9.0') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static',filename='vendor/select2/select2.min.js', v='3.5.2') }}" type="text/javascript"></script>
+    {% if admin_view %}
+    {% if admin_view.extra_js %}
+      {% for js_url in admin_view.extra_js %}
+        <script src="{{ js_url }}" type="text/javascript"></script>
+      {% endfor %}
+    {% endif %}
+    {% endif %}
+    {% endblock %}
+
+    {% block tail %}
+    {% endblock %}
+
+</html>
